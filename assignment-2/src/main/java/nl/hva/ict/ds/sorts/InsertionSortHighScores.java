@@ -1,6 +1,10 @@
-package nl.hva.ict.ds;
+package nl.hva.ict.ds.sorts;
+
+import nl.hva.ict.ds.interfaces.HighScoreList;
+import nl.hva.ict.ds.objects.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InsertionSortHighScores implements HighScoreList {
@@ -14,10 +18,7 @@ public class InsertionSortHighScores implements HighScoreList {
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
         List<Player> customizedList = new ArrayList<>();
-        int loopAmount = (numberOfHighScores > list.size()) ? list.size() : numberOfHighScores;
-
-        if (loopAmount > list.size() || list.size() == 0)
-            throw new IndexOutOfBoundsException("The list is empty.");
+        int loopAmount = (numberOfHighScores >= list.size()) ? list.size() : numberOfHighScores;
 
         List<Player> sortedList = sort();
 
@@ -41,6 +42,7 @@ public class InsertionSortHighScores implements HighScoreList {
                 j--;
             }
         }
+        Collections.reverse(list);
         return list;
     }
 

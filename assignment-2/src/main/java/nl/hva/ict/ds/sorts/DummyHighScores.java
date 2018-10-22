@@ -1,4 +1,7 @@
-package nl.hva.ict.ds;
+package nl.hva.ict.ds.sorts;
+
+import nl.hva.ict.ds.interfaces.HighScoreList;
+import nl.hva.ict.ds.objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;

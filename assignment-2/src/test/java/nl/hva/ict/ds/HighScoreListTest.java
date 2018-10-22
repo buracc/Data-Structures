@@ -1,5 +1,10 @@
 package nl.hva.ict.ds;
 
+import nl.hva.ict.ds.interfaces.HighScoreList;
+import nl.hva.ict.ds.objects.Player;
+import nl.hva.ict.ds.sorts.BucketSortHighScores;
+import nl.hva.ict.ds.sorts.InsertionSortHighScores;
+import nl.hva.ict.ds.sorts.PriorityQueueHighScores;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,11 +30,12 @@ public class HighScoreListTest {
         // Here you should select your implementation to be tested.
 //        highScores = new DummyHighScores();
 //        highScores = new InsertionSortHighScores();
-//        highScores = new BucketSortHighScores();
-        highScores = new PriorityQueueHighScores();
+        highScores = new BucketSortHighScores();
+//        highScores = new PriorityQueueHighScores();
 
         nearlyHeadlessNick = new Player("Nicholas", "de Mimsy-Porpington", getHighScore() % 200);
         dumbledore = new Player("Albus", "Dumbledore", nearlyHeadlessNick.getHighScore() * 1000);
+        //dumbledore's score can de MAX_HIGH_SCORE overschrijden, hoort dit zo?
     }
 
     @Test
@@ -71,6 +77,8 @@ public class HighScoreListTest {
     public void harryBeatsDumbledore() {
         highScores.add(dumbledore);
         Player harry = new Player("Harry", "Potter", dumbledore.getHighScore() + 1);
+        highScores.add(harry);// Nico je bent add(harry) vergeten
+
         assertEquals(harry, highScores.getHighScores(1).get(0));
     }
 

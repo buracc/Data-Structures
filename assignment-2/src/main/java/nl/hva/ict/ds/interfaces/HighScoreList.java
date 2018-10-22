@@ -1,4 +1,6 @@
-package nl.hva.ict.ds;
+package nl.hva.ict.ds.interfaces;
+
+import nl.hva.ict.ds.objects.Player;
 
 import java.util.List;
 
@@ -37,5 +39,6 @@ public interface HighScoreList {
     List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException;
 
     List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException;
+
     List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException;
 }

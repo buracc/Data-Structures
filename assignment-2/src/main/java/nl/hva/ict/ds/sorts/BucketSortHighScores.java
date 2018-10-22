@@ -1,6 +1,10 @@
-package nl.hva.ict.ds;
+package nl.hva.ict.ds.sorts;
+
+import nl.hva.ict.ds.interfaces.HighScoreList;
+import nl.hva.ict.ds.objects.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,12 +19,10 @@ public class BucketSortHighScores implements HighScoreList {
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
         List<Player> customizedList = new ArrayList<>();
-        int loopAmount = (numberOfHighScores > list.size()) ? list.size() : numberOfHighScores;
+        int loopAmount = (numberOfHighScores >= list.size()) ? list.size() : numberOfHighScores;
 
-        if (loopAmount > list.size() || list.size() == 0)
-            throw new IndexOutOfBoundsException("The list is empty.");
+        List<Player> sortedList = bucketSort(list);
 
-        List<Player> sortedList = bucketSort();
         for (int i = 0; i < loopAmount; i++) {
             customizedList.add(sortedList.get(i));
         }
@@ -51,54 +53,56 @@ public class BucketSortHighScores implements HighScoreList {
     public List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
         for (Player p : list) {
-            if (p.getFirstName().equalsIgnoreCase(lastName))
+            if (p.getLastName().equalsIgnoreCase(lastName))
                 foundPlayers.add(p);
         }
         return foundPlayers;
     }
 
-    public List<Player> bucketSort() {
 
-        long minVal = list.get(0).getHighScore();
-        long maxVal = list.get(0).getHighScore();
+    static class Bucket {
+        List<Player> bucket = new ArrayList<>();
+    }
 
-        // get max and min value
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getHighScore() < minVal) {
-                minVal = list.get(i).getHighScore();
-            } else if (list.get(i).getHighScore() > maxVal) {
-                maxVal = list.get(i).getHighScore();
+    public List<Player> bucketSort(List<Player> list) {
+        List<Player> sortedList = new ArrayList<>();
+
+        long maxScore = 0;
+        for (Player p : list) {
+            if (p.getHighScore() >= maxScore) {
+                maxScore = p.getHighScore();
             }
         }
 
-        if (list == null || list.size() == 0 || minVal == maxVal) return list;
+        int maxBuckets = 4;
+        long bucketRange = maxScore / maxBuckets;
+        long tempBucketRange = 0;
+        Bucket[] buckets = new Bucket[maxBuckets];
+        Arrays.fill(buckets, new Bucket());
 
-        final int N = list.size();
-        final int M = (int) (maxVal - minVal);
-        final int MAX_BUCKETS = M/N + 1;
-
-        List<List<Player>> buckets = new ArrayList<>(MAX_BUCKETS);
-        for(int i = 0; i < MAX_BUCKETS; i++) buckets.add(new ArrayList<>());
-
-        for (int i = 0; i < N; i++) {
-            int bi = (int) (list.get(i).getHighScore() - minVal) / M;
-            List <Player> bucket = buckets.get(bi);
-            bucket.add(list.get(i));
-        }
-
-        for (int bi = 0, j = 0; bi < MAX_BUCKETS; bi++) {
-            List<Player> bucket = buckets.get(bi);
-            if (bucket != null) {
-                sort(bucket);
-                for (int k = 0; k < bucket.size(); k++) {
-                    list.set(j++, bucket.get(k));
+        for (int i = 0; i < maxBuckets; i++) {
+            tempBucketRange = (tempBucketRange + bucketRange) + 1;
+            for (Player p : list) {
+                if (p.getHighScore() <= tempBucketRange && p.getHighScore() > tempBucketRange - bucketRange) {
+                    buckets[i].bucket.add(p);
                 }
             }
         }
-        return list;
+
+        for (Bucket b : buckets) {
+            sort(b.bucket);
+        }
+
+        for (Bucket b : buckets) {
+            sortedList.addAll(b.bucket);
+
+        }
+
+        Collections.reverse(sortedList);
+        return sortedList;
     }
 
-    public List<Player> sort(List<Player> list) {
+    void sort(List<Player> list) {
         long key;
         Player temp;
 
@@ -112,6 +116,5 @@ public class BucketSortHighScores implements HighScoreList {
                 j--;
             }
         }
-        return list;
     }
 }

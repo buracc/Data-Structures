@@ -1,4 +1,6 @@
-package nl.hva.ict.ds;
+package nl.hva.ict.ds.objects;
+
+import java.util.Comparator;
 
 /**
  * Player keeps track of the name and the highscore for a player.
@@ -31,4 +33,5 @@ public class Player {
     public void setHighScore(long highScore) {
         this.highScore = highScore;
     }
+
 }
