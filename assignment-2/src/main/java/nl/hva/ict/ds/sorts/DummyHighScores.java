@@ -34,23 +34,4 @@ public class DummyHighScores implements HighScoreList {
         return matchedPlayers;
     }
 
-    @Override
-    public List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : players) {
-            if (p.getFirstName().equalsIgnoreCase(firstName))
-                foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
-
-    @Override
-    public List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : players) {
-            if (p.getFirstName().equalsIgnoreCase(lastName))
-                foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
 }

@@ -65,43 +65,6 @@ public class BucketSortHighScores implements HighScoreList {
         return foundPlayers;
     }
 
-    /**
-     * Zoekt een Player op basis van opgegeven firstName. Bij het zoeken wordt niet gekeken naar hoofdletter
-     * gevoeligheid. Wanneer er een speler is gevonden met opgegeven firstName, wordt deze toegevoegd aan een nieuwe lijst
-     * die uiteindelijk wordt geretourneerd door de methode.
-     *
-     * @param firstName De firstName die wordt meegegeven waarmee wordt gezocht naar spelers.
-     * @return De lijst van gevonden spelers.
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getFirstName().equalsIgnoreCase(firstName))
-                foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
-
-    /**
-     * Zoekt een Player op basis van opgegeven lastName. Bij het zoeken wordt niet gekeken naar hoofdletter
-     * gevoeligheid. Wanneer er een speler is gevonden met opgegeven lastName, wordt deze toegevoegd aan een nieuwe lijst
-     * die uiteindelijk wordt geretourneerd door de methode.
-     *
-     * @param lastName De lastName die wordt meegegeven waarmee wordt gezocht naar spelers.
-     * @return De lijst van gevonden spelers.
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getLastName().equalsIgnoreCase(lastName))
-                foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
 
     /**
      * Bucket Sort. Werkt als volgt:
@@ -121,8 +84,8 @@ public class BucketSortHighScores implements HighScoreList {
     public List<Player> bucketSort(List<Player> list) {
         List<Player> sortedList = new ArrayList<>();
 
-        long maxScore = 0;
-        long minScore = 0;
+        long maxScore = Integer.MIN_VALUE;
+        long minScore = Integer.MAX_VALUE;
         for (Player p : list) {
             if (p.getHighScore() >= maxScore) {
                 maxScore = p.getHighScore();
@@ -142,8 +105,13 @@ public class BucketSortHighScores implements HighScoreList {
             buckets[i] = new Bucket();
         }
 
+        /*
+        TODO
+        - issue is dat de range niet klopt, max scores boven de range worden toegevoegd
+         */
+
         for (int i = 0; i < maxBuckets; i++) {
-            tempBucketRange = (tempBucketRange + bucketRange) + 1;
+            tempBucketRange = (tempBucketRange + bucketRange);
             for (Player p : list) {
                 if (p.getHighScore() <= tempBucketRange && p.getHighScore() >= tempBucketRange - bucketRange) {
                     buckets[i].bucket.add(p);

@@ -6,10 +6,18 @@ import nl.hva.ict.ds.objects.Player;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
-public class PriorityQueueHighScores implements HighScoreList, Comparator<Player> {
-    List<Player> list = new ArrayList<>(); // ArrayList van Players die worden toegevoegd.
-    int i = 0; // Index van de queue.
+public class PriorityQueueHighScores implements HighScoreList {
+    List<Player> playerList = new ArrayList<>(); // ArrayList van Players die worden toegevoegd.
+    PriorityQueue<Player> priorityQueue = new PriorityQueue<>((p1, p2) -> {
+        if (p1.getHighScore() > p2.getHighScore())
+            return 1;
+        if (p1.getHighScore() < p2.getHighScore())
+            return -1;
+        else
+            return 0;
+    });
 
     /**
      * Werkt op dezelfde manier als in BucketSortHighScores, alleen wordt hier de lijst niet gesorteerd, omdat deze bij
@@ -20,10 +28,12 @@ public class PriorityQueueHighScores implements HighScoreList, Comparator<Player
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
         List<Player> customizedList = new ArrayList<>();
-        int loopAmount = (numberOfHighScores >= list.size()) ? list.size() : numberOfHighScores;
+        List<Player> PQList = new ArrayList<>(priorityQueue);
+
+        int loopAmount = (numberOfHighScores >= PQList.size()) ? PQList.size() : numberOfHighScores;
 
         for (int i = 0; i < loopAmount; i++) {
-            customizedList.add(list.get(i));
+            customizedList.add(PQList.get(i));
         }
         return customizedList;
     }
@@ -36,52 +46,8 @@ public class PriorityQueueHighScores implements HighScoreList, Comparator<Player
      */
     @Override
     public void add(Player player) {
-        if (list.isEmpty()) {
-            list.add(player);
-        } else {
-            recursiveAdd(i, player);
-        }
+        priorityQueue.add(player);
     }
-
-    /**
-     * Wordt aangeroepen wanneer de queue niet leeg is. De methode word recursief aangeroepen
-     * en gaat net zo lang door totdat de compare methode een getal hoger of gelijk aan 0 returnt.
-     * Dit wil zeggen dat de highScore van de speler groter of gelijk is dan het element op de huidige index,
-     * en dus het object voor dat element word toegevoegd, omdat de 'prioriteit' hoger is.
-     *
-     * @param index index van de Player.
-     * @param player Player object die wordt toegevoegd aan de queue.
-     *
-     */
-    private void recursiveAdd(int index, Player player) {
-        if (index > list.size()-1) {
-            list.add(player);
-        } else {
-            if (compare(player, list.get(index)) >= 0) {
-                list.add(index, player);
-            } else {
-                recursiveAdd(++index, player);
-            }
-        }
-    }
-
-    /**
-     * @param p1
-     * @param p2
-     * @return een getal lager als 0 wanneer de highScore kleiner is dan het vergeleken object,
-     * of een getal hoger als 0 wanneer de highScore groter dan het vergeleken object, en anders 0
-     * wanneer de highScores gelijk zijn aan elkaar.
-     */
-    @Override
-    public int compare(Player p1, Player p2) {
-        if (p1.getHighScore() > p2.getHighScore())
-            return 1;
-        if (p1.getHighScore() < p2.getHighScore())
-            return -1;
-        else
-            return 0;
-    }
-
 
     /**
      * De volgende methodes werken allemaal op de zelfde manier in alle klassen. Zie de methode in BucketSortHighScores
@@ -93,45 +59,20 @@ public class PriorityQueueHighScores implements HighScoreList, Comparator<Player
      *                 lastName is not null or empty.
      * @param lastName the lastname of the playersmust start with or be equal to this value, can be null or empty if
      *                 firstName is not null or empty
-     * @return List van gevonden spelers op basis van ingevoerde firstName en lastName.
+     * @return
      * @throws IllegalArgumentException
      */
     @Override
     public List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getFirstName().equalsIgnoreCase(firstName) && p.getLastName().equalsIgnoreCase(lastName))
+        for (Player p : playerList) {
+            if (firstName.equalsIgnoreCase(p.getFirstName()) && lastName.equals("")) {
                 foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
-
-    /**
-     * @param firstName
-     * @return List van gevonden spelers op basis van ingevoerde firstName.
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getFirstName().equalsIgnoreCase(firstName))
+            } else if (firstName.equals("") && lastName.equalsIgnoreCase(p.getLastName())) {
                 foundPlayers.add(p);
-        }
-        return foundPlayers;
-    }
-
-    /**
-     * @param lastName
-     * @return List van gevonden spelers op basis van ingevoerde lastName.
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException {
-        List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getLastName().equalsIgnoreCase(lastName))
+            } else if (firstName.equalsIgnoreCase(p.getFirstName()) && lastName.equalsIgnoreCase(p.getLastName())){
                 foundPlayers.add(p);
+            }
         }
         return foundPlayers;
     }

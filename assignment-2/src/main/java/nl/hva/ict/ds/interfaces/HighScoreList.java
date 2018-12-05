@@ -38,7 +38,4 @@ public interface HighScoreList {
      */
     List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException;
 
-    List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException;
-
-    List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException;
 }
