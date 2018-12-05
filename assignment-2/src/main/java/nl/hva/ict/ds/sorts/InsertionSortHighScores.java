@@ -15,6 +15,12 @@ public class InsertionSortHighScores implements HighScoreList {
         list.add(player);
     }
 
+    /**
+     * Werkt op de zelfde manier als in BucketSort. Zie de methode in BucketSortHighScores.
+     *
+     * @param numberOfHighScores the maximum number of high-scores you want.
+     * @return
+     */
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
         List<Player> customizedList = new ArrayList<>();
@@ -28,25 +34,44 @@ public class InsertionSortHighScores implements HighScoreList {
         return customizedList;
     }
 
+
+    /**
+     * Insertion Sort. Beginnend op index 1, wordt de highscore vergeleken met index-1, en wordt er gekeken of deze groter
+     * is dan de highscore ervoor. Als dat zo is worden deze met elkaar omgewisseld. Normaal moet er worden gekeken of de
+     * waarde ervoor kleiner is, maar omdat de hoogste highscore in dit geval vooraan moet staan wordt er gekeken of deze
+     * groter is.
+     *
+     */
     public List<Player> sort() {
-        long key;
+        long highScore;
         Player temp;
 
         for (int i = 1; i < list.size(); i++) {
-            key = list.get(i).getHighScore();
+            highScore = list.get(i).getHighScore();
             int j = i - 1;
-            while (j >= 0 && key < list.get(j).getHighScore()) {
+            while (j >= 0 && highScore > list.get(j).getHighScore()) {
                 temp = list.get(j);
                 list.set(j, list.get(j + 1));
                 list.set(j + 1, temp);
                 j--;
             }
         }
-        Collections.reverse(list);
         return list;
     }
 
+    /**
+     * De volgende methodes werken allemaal op de zelfde manier in alle klassen. Zie de methode in BucketSortHighScores
+     * voor documentatie.
+     */
 
+    /**
+     * @param firstName the firstname of the players must start with or be equal to this value, can be null or empty if
+     *                 lastName is not null or empty.
+     * @param lastName the lastname of the playersmust start with or be equal to this value, can be null or empty if
+     *                 firstName is not null or empty
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
@@ -57,6 +82,11 @@ public class InsertionSortHighScores implements HighScoreList {
         return foundPlayers;
     }
 
+    /**
+     * @param firstName
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public List<Player> findPlayerByFirstName(String firstName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
@@ -67,6 +97,11 @@ public class InsertionSortHighScores implements HighScoreList {
         return foundPlayers;
     }
 
+    /**
+     * @param lastName
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public List<Player> findPlayerByLastName(String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();

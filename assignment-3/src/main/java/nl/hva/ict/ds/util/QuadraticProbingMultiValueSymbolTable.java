@@ -41,13 +41,15 @@ public class QuadraticProbingMultiValueSymbolTable implements MultiValueSymbolTa
     public List<Player> get(String key) {
         List<Player> foundPlayers = new ArrayList<>();
         int i = hash(key);
-        System.out.println(i);
         int power = 1;
         while (keys[i] != null) {
             if (keys[i] != null && keys[i].equals(key)) {
-                foundPlayers.add(values[i]);
+                if (!foundPlayers.contains(values[i])) {
+                    foundPlayers.add(values[i]);
+                } else {
+                    break;
+                }
             }
-            System.out.println(i);
             i = (i + power * power++) % maxSize;
         }
 //        for (int i = 0; i < maxSize; i++) {

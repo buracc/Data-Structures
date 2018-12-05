@@ -27,7 +27,7 @@ public class DoubleHashingMultiValueSymbolTable implements MultiValueSymbolTable
         int i = hash(key);
         while (keys[i] != null) {
             collisions++;
-            i += (hash(key) + 1) % maxSize;
+            i = 4 - (i % 4);
         }
         keys[i] = key;
         values[i] = value;

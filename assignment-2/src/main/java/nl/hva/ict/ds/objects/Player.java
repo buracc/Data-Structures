@@ -34,4 +34,8 @@ public class Player {
         this.highScore = highScore;
     }
 
+    @Override
+    public String toString() {
+        return "" + highScore;
+    }
 }

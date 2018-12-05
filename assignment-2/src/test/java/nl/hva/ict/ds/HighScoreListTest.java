@@ -1,5 +1,6 @@
 package nl.hva.ict.ds;
 
+import com.github.javafaker.Faker;
 import nl.hva.ict.ds.interfaces.HighScoreList;
 import nl.hva.ict.ds.objects.Player;
 import nl.hva.ict.ds.sorts.BucketSortHighScores;
@@ -77,7 +78,8 @@ public class HighScoreListTest {
     public void harryBeatsDumbledore() {
         highScores.add(dumbledore);
         Player harry = new Player("Harry", "Potter", dumbledore.getHighScore() + 1);
-        highScores.add(harry);// Nico je bent add(harry) vergeten
+
+        highScores.add(harry);// Ben je add(harry) vergeten?
 
         assertEquals(harry, highScores.getHighScores(1).get(0));
     }
@@ -87,6 +89,9 @@ public class HighScoreListTest {
     private long getHighScore() {
         return randomizer.nextInt(MAX_HIGH_SCORE);
     }
+
+
+    /* Extra unit tests */
 
     @Test
     public void getByName() {
@@ -101,8 +106,19 @@ public class HighScoreListTest {
     }
 
     @Test
+    public void getMultipleByFirstName() {
+        highScores.add(dumbledore);
+        highScores.add(new Player("Albus", "Potter", 1000));
+        assertEquals(2, highScores.findPlayerByFirstName("albus").size());
+    }
+
+    @Test
     public void getByLastName() {
         highScores.add(dumbledore);
         assertEquals(dumbledore, highScores.findPlayerByLastName("dumbledore").get(0));
     }
+
+
+
+
 }
