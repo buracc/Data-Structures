@@ -3,10 +3,7 @@ package nl.hva.ict.ds.sorts;
 import nl.hva.ict.ds.interfaces.HighScoreList;
 import nl.hva.ict.ds.objects.Player;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class PriorityQueueHighScores implements HighScoreList {
     List<Player> playerList = new ArrayList<>(); // ArrayList van Players die worden toegevoegd.
@@ -27,15 +24,7 @@ public class PriorityQueueHighScores implements HighScoreList {
      */
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
-        List<Player> customizedList = new ArrayList<>();
-        List<Player> PQList = new ArrayList<>(priorityQueue);
-
-        int loopAmount = (numberOfHighScores >= PQList.size()) ? PQList.size() : numberOfHighScores;
-
-        for (int i = 0; i < loopAmount; i++) {
-            customizedList.add(PQList.get(i));
-        }
-        return customizedList;
+        return priorityQueueToList().subList(0, Math.min(numberOfHighScores, priorityQueueToList().size()));
     }
 
     /**
@@ -49,10 +38,15 @@ public class PriorityQueueHighScores implements HighScoreList {
         priorityQueue.add(player);
     }
 
-    /**
-     * De volgende methodes werken allemaal op de zelfde manier in alle klassen. Zie de methode in BucketSortHighScores
-     * voor documentatie.
-     */
+    private List<Player> priorityQueueToList() {
+        playerList.clear();
+        PriorityQueue<Player> priorityQueue = new PriorityQueue<>(this.priorityQueue);
+        while (!priorityQueue.isEmpty()) {
+            playerList.add(priorityQueue.poll());
+        }
+        Collections.reverse(playerList);
+        return playerList;
+    }
 
     /**
      * @param firstName the firstname of the players must start with or be equal to this value, can be null or empty if
@@ -65,7 +59,7 @@ public class PriorityQueueHighScores implements HighScoreList {
     @Override
     public List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : playerList) {
+        for (Player p : priorityQueueToList()) {
             if (firstName.equalsIgnoreCase(p.getFirstName()) && lastName.equals("")) {
                 foundPlayers.add(p);
             } else if (firstName.equals("") && lastName.equalsIgnoreCase(p.getLastName())) {

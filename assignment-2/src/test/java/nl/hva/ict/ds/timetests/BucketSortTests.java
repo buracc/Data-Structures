@@ -15,6 +15,14 @@ public class BucketSortTests {
     HighScoreList highScores = new BucketSortHighScores();
 
     @Test
+    public void hundredPlayers() {
+        int maxSize = 100;
+        HighScoreListTest.generatePlayers(maxSize, highScores);
+
+        assertEquals(maxSize, highScores.getHighScores(maxSize).size());
+    }
+
+    @Test
     public void thousandPlayers() {
         int maxSize = 1000;
         HighScoreListTest.generatePlayers(maxSize, highScores);

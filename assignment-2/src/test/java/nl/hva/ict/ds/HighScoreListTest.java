@@ -32,9 +32,9 @@ public class HighScoreListTest {
     public void setup() {
         // Here you should select your implementation to be tested.
 //        highScores = new DummyHighScores();
-        highScores = new InsertionSortHighScores();
+//        highScores = new InsertionSortHighScores();
 //        highScores = new BucketSortHighScores();
-//        highScores = new PriorityQueueHighScores();
+        highScores = new PriorityQueueHighScores();
 
         nearlyHeadlessNick = new Player("Nicholas", "de Mimsy-Porpington", getHighScore() % 200);
         dumbledore = new Player("Albus", "Dumbledore", nearlyHeadlessNick.getHighScore() * 1000);

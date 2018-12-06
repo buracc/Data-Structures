@@ -16,6 +16,7 @@ public class PriorityQueueTests {
         int maxSize = 1000;
         HighScoreListTest.generatePlayers(maxSize, highScores);
 
+        System.out.println(highScores.getHighScores(maxSize));
         assertEquals(maxSize, highScores.getHighScores(maxSize).size());
     }
 

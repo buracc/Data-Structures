@@ -3,17 +3,14 @@ package nl.hva.ict.ds.sorts;
 import nl.hva.ict.ds.interfaces.HighScoreList;
 import nl.hva.ict.ds.objects.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BucketSortHighScores implements HighScoreList {
-    private List<Player> list = new ArrayList<>();
+    private List<Player> playerList = new ArrayList<>();
 
     @Override
     public void add(Player player) {
-        list.add(player);
+        playerList.add(player);
     }
 
     /**
@@ -32,35 +29,30 @@ public class BucketSortHighScores implements HighScoreList {
      */
     @Override
     public List<Player> getHighScores(int numberOfHighScores) {
-        List<Player> customizedList = new ArrayList<>();
-        int loopAmount = (numberOfHighScores >= list.size()) ? list.size() : numberOfHighScores;
+        List<Player> sortedList = bucketSort(playerList);
 
-        List<Player> sortedList = bucketSort(list);
-
-        for (int i = 0; i < loopAmount; i++) {
-            customizedList.add(sortedList.get(i));
-        }
-        return customizedList;
+        return playerList.subList(0, Math.min(numberOfHighScores, sortedList.size()));
     }
 
     /**
-     * Zoekt spelers op basis van firstName en lastName. Bij het zoeken wordt niet gekeken naar hoofdletter
-     * gevoeligheid. Wanneer er een speler is gevonden met opgegeven firstName en lastName, wordt deze toegevoegd aan een
-     * nieuwe lijst die uiteindelijk wordt geretourneerd door de methode.
-     *
      * @param firstName the firstname of the players must start with or be equal to this value, can be null or empty if
-     *                 lastName is not null or empty. De firstName die wordt meegegeven waarmee wordt gezocht naar spelers.
+     *                 lastName is not null or empty.
      * @param lastName the lastname of the playersmust start with or be equal to this value, can be null or empty if
-     *                 firstName is not null or empty. De lastName die wordt meegegeven waarmee wordt gezocht naar spelers.
-     * @return De lijst van gevonden spelers.
+     *                 firstName is not null or empty
+     * @return
      * @throws IllegalArgumentException
      */
     @Override
     public List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException {
         List<Player> foundPlayers = new ArrayList<>();
-        for (Player p : list) {
-            if (p.getFirstName().equalsIgnoreCase(firstName) && p.getLastName().equalsIgnoreCase(lastName))
+        for (Player p : playerList) {
+            if (firstName.equalsIgnoreCase(p.getFirstName()) && lastName.equals("")) {
                 foundPlayers.add(p);
+            } else if (firstName.equals("") && lastName.equalsIgnoreCase(p.getLastName())) {
+                foundPlayers.add(p);
+            } else if (firstName.equalsIgnoreCase(p.getFirstName()) && lastName.equalsIgnoreCase(p.getLastName())){
+                foundPlayers.add(p);
+            }
         }
         return foundPlayers;
     }
@@ -84,40 +76,50 @@ public class BucketSortHighScores implements HighScoreList {
     public List<Player> bucketSort(List<Player> list) {
         List<Player> sortedList = new ArrayList<>();
 
+        if (list.isEmpty()) {
+            return list;
+        }
+
         long maxScore = Integer.MIN_VALUE;
         long minScore = Integer.MAX_VALUE;
+
         for (Player p : list) {
             if (p.getHighScore() >= maxScore) {
                 maxScore = p.getHighScore();
-                minScore = maxScore;
             }
 
-            if (p.getHighScore() < minScore) {
+            if (p.getHighScore() <= minScore) {
                 minScore = p.getHighScore();
             }
         }
 
-        int maxBuckets = (int) (maxScore - minScore) / list.size() + 1;
-        long bucketRange = maxScore / maxBuckets;
-        long tempBucketRange = 0;
+        int maxBuckets = (int) Math.sqrt(list.size());
+        long bucketRange = maxScore / maxBuckets + 1;
+        long tempBucketRange = minScore;
+        long maxBucketRange = bucketRange;
         Bucket[] buckets = new Bucket[maxBuckets];
+
         for (int i = 0; i < maxBuckets; i++) {
             buckets[i] = new Bucket();
         }
 
-        /*
-        TODO
-        - issue is dat de range niet klopt, max scores boven de range worden toegevoegd
-         */
-
         for (int i = 0; i < maxBuckets; i++) {
-            tempBucketRange = (tempBucketRange + bucketRange);
             for (Player p : list) {
-                if (p.getHighScore() <= tempBucketRange && p.getHighScore() >= tempBucketRange - bucketRange) {
+                if (p.getHighScore() >= tempBucketRange && p.getHighScore() <= bucketRange) {
                     buckets[i].bucket.add(p);
+                } else {
+//                    System.out.println("Couldn't add player: " + p.getHighScore() + " to bucket: " + i);
                 }
             }
+//            System.out.println();
+//            System.out.println(tempBucketRange + " - " + bucketRange);
+//            System.out.println("Bucket " + i + " (size: " + buckets[i].bucket.size() + ") :" + buckets[i].bucket);
+//            totalsize += buckets[i].bucket.size();
+
+            tempBucketRange = bucketRange + 1;
+            bucketRange += maxBucketRange;
         }
+//        System.out.println("Elements inside: " + totalsize);
 
         for (Bucket b : buckets) {
             sort(b.bucket);

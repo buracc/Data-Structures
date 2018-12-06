@@ -34,6 +34,7 @@ public class Player {
         this.highScore = highScore;
     }
 
+    //Deze methode heb ik toegevoegd om mijn code te debuggen mbv prints
     @Override
     public String toString() {
         return "" + highScore;

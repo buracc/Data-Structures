@@ -33,7 +33,7 @@ public class InsertionSortHighScores implements HighScoreList {
      * groter is.
      *
      */
-    public List<Player> sort() {
+    public void sort() {
         long highScore;
         Player temp;
 
@@ -47,13 +47,7 @@ public class InsertionSortHighScores implements HighScoreList {
                 j--;
             }
         }
-        return playerList;
     }
-
-    /**
-     * De volgende methodes werken allemaal op de zelfde manier in alle klassen. Zie de methode in BucketSortHighScores
-     * voor documentatie.
-     */
 
     /**
      * @param firstName the firstname of the players must start with or be equal to this value, can be null or empty if
