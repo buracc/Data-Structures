@@ -38,6 +38,11 @@ public class PriorityQueueHighScores implements HighScoreList {
         priorityQueue.add(player);
     }
 
+    /**
+     * Kopieert de PriorityQueue naar een ArrayList met de functie poll(), die de kop van de PriorityQueue telkens pakt,
+     * en verwijdert.
+     * @return playerList de ArrayList van spelers
+     */
     private List<Player> priorityQueueToList() {
         playerList.clear();
         PriorityQueue<Player> priorityQueue = new PriorityQueue<>(this.priorityQueue);

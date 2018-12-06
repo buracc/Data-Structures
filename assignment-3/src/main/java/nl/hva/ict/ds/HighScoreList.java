@@ -35,4 +35,6 @@ public interface HighScoreList {
      * @throws IllegalArgumentException if both firstName and lastName or null or empty.
      */
     List<Player> findPlayer(String firstName, String lastName) throws IllegalArgumentException;
+
+    String getAllCollisions();
 }

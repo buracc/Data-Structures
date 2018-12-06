@@ -24,4 +24,6 @@ public interface MultiValueSymbolTable<K, V> {
      * @return the list of values that have been added using the given key.
      */
     List<V> get(K key);
+
+    int getCollisions();
 }

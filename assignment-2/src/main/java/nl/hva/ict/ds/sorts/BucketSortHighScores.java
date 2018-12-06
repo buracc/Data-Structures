@@ -14,16 +14,6 @@ public class BucketSortHighScores implements HighScoreList {
     }
 
     /**
-     * Geeft een lijst van de top 'x' spelers. In dit geval is 'x' het maximum aantal spelers waar je naar wilt zoeken.
-     *
-     * Bijvoorbeeld:
-     * - Er zijn 200 spelers in de lijst.
-     * - Je wilt een lijst van de top 10 spelers hebben, dus je geeft de waarde 10 mee aan de methode.
-     * - De methode kijkt of de meegegeven waarde groter of gelijk is aan de grootte van de lijst.
-     * - Als dat zo is, dus als de lijst bijvoorbeeld maar 6 spelers heeft, retourneert de methode een lijst van top 6 spelers.
-     * - Als dat niet zo is, retourneert de methode de lijst van de top 10 spelers. (10 is dus de waarde die in dit geval
-     * is meegegeven aan de methode)
-     *
      * @param numberOfHighScores the maximum number of high-scores you want.
      * @return De lijst van gevonden spelers.
      */
@@ -31,7 +21,7 @@ public class BucketSortHighScores implements HighScoreList {
     public List<Player> getHighScores(int numberOfHighScores) {
         List<Player> sortedList = bucketSort(playerList);
 
-        return playerList.subList(0, Math.min(numberOfHighScores, sortedList.size()));
+        return sortedList.subList(0, Math.min(numberOfHighScores, sortedList.size()));
     }
 
     /**
@@ -95,7 +85,7 @@ public class BucketSortHighScores implements HighScoreList {
 
         int maxBuckets = (int) Math.sqrt(list.size());
         long bucketRange = maxScore / maxBuckets + 1;
-        long tempBucketRange = minScore;
+        long minBucketRange = minScore;
         long maxBucketRange = bucketRange;
         Bucket[] buckets = new Bucket[maxBuckets];
 
@@ -105,21 +95,13 @@ public class BucketSortHighScores implements HighScoreList {
 
         for (int i = 0; i < maxBuckets; i++) {
             for (Player p : list) {
-                if (p.getHighScore() >= tempBucketRange && p.getHighScore() <= bucketRange) {
+                if (p.getHighScore() >= minBucketRange && p.getHighScore() <= bucketRange) {
                     buckets[i].bucket.add(p);
-                } else {
-//                    System.out.println("Couldn't add player: " + p.getHighScore() + " to bucket: " + i);
                 }
             }
-//            System.out.println();
-//            System.out.println(tempBucketRange + " - " + bucketRange);
-//            System.out.println("Bucket " + i + " (size: " + buckets[i].bucket.size() + ") :" + buckets[i].bucket);
-//            totalsize += buckets[i].bucket.size();
-
-            tempBucketRange = bucketRange + 1;
+            minBucketRange = bucketRange + 1;
             bucketRange += maxBucketRange;
         }
-//        System.out.println("Elements inside: " + totalsize);
 
         for (Bucket b : buckets) {
             sort(b.bucket);

@@ -7,6 +7,7 @@ import nl.hva.ict.ds.util.QuadraticProbingMultiValueSymbolTable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,6 +56,12 @@ public class HighScorePlayerFinder implements HighScoreList {
     public List<Player> getHighScores(int numberOfHighScores) {
         // No need to implement this method.
         return null;
+    }
+
+    @Override
+    public String getAllCollisions() {
+        int[] collisionAmount = {fullNameFinder.getCollisions(), firstNameFinder.getCollisions(), lastNameFinder.getCollisions()};
+        return "DH, LP, QP collisions: " + Arrays.toString(collisionAmount);
     }
 
 }

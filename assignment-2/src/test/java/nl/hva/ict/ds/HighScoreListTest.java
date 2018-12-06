@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import nl.hva.ict.ds.interfaces.HighScoreList;
 import nl.hva.ict.ds.objects.Player;
 import nl.hva.ict.ds.sorts.BucketSortHighScores;
+import nl.hva.ict.ds.sorts.DummyHighScores;
 import nl.hva.ict.ds.sorts.InsertionSortHighScores;
 import nl.hva.ict.ds.sorts.PriorityQueueHighScores;
 import org.junit.Before;
@@ -30,15 +31,15 @@ public class HighScoreListTest {
 
     @Before
     public void setup() {
-        // Here you should select your implementation to be tested.
+//         Here you should select your implementation to be tested.
 //        highScores = new DummyHighScores();
 //        highScores = new InsertionSortHighScores();
-//        highScores = new BucketSortHighScores();
-        highScores = new PriorityQueueHighScores();
+        highScores = new BucketSortHighScores();
+//        highScores = new PriorityQueueHighScores();
 
         nearlyHeadlessNick = new Player("Nicholas", "de Mimsy-Porpington", getHighScore() % 200);
         dumbledore = new Player("Albus", "Dumbledore", nearlyHeadlessNick.getHighScore() * 1000);
-        //dumbledore's score can de MAX_HIGH_SCORE overschrijden, hoort dit zo?
+        //dumbledore's score can de MAX_HIGH_SCORE overschrijden
     }
 
     public static void generatePlayers(int amount, HighScoreList highScores) {
@@ -111,6 +112,9 @@ public class HighScoreListTest {
 
     /* Extra unit tests */
 
+    /**
+     * Test de grootte van de lijst
+     */
     @Test
     public void checkSize() {
         int maxSize = 20000;
@@ -119,18 +123,27 @@ public class HighScoreListTest {
         assertEquals(maxSize, highScores.getHighScores(maxSize).size());
     }
 
+    /**
+     * Test het zoeken op voornaam en achternaam
+     */
     @Test
     public void getByName() {
         highScores.add(dumbledore);
         assertEquals(dumbledore, highScores.findPlayer("albus", "dumbledore").get(0));
     }
 
+    /**
+     * Test het zoeken op voornaam
+     */
     @Test
     public void getByFirstName() {
         highScores.add(dumbledore);
         assertEquals(dumbledore, highScores.findPlayer("albus", "").get(0));
     }
 
+    /**
+     * Test het zoeken van meerdere op voornaam
+     */
     @Test
     public void getMultipleByFirstName() {
         highScores.add(dumbledore);
@@ -138,21 +151,26 @@ public class HighScoreListTest {
         assertEquals(2, highScores.findPlayer("albus", "").size());
     }
 
+    /**
+     * Test het zoeken op achternaam
+     */
     @Test
     public void getByLastName() {
         highScores.add(dumbledore);
         assertEquals(dumbledore, highScores.findPlayer("", "dumbledore").get(0));
     }
 
+    /**
+     * Test de volgorde door te kijken of de hoogste score op de eerste plaats staat
+     */
     @Test
     public void checkHighestScore() {
         int maxSize = 20000;
         generatePlayers(maxSize, highScores);
-
         long highestScore = Integer.MIN_VALUE;
 
         for (Player p : highScores.getHighScores(maxSize)) {
-            if (p.getHighScore() > highestScore) {
+            if (p.getHighScore() >= highestScore) {
                 highestScore = p.getHighScore();
             }
         }
@@ -160,26 +178,22 @@ public class HighScoreListTest {
         assertEquals(highestScore, highScores.getHighScores(maxSize).get(0).getHighScore());
     }
 
+    /**
+     * Test de volgorde door te kijken of de laagste score op de laatste plaats staat
+     */
     @Test
     public void checkLowestScore() {
         int maxSize = 20000;
         generatePlayers(maxSize, highScores);
-
         long lowestScore = Integer.MAX_VALUE;
 
         for (Player p : highScores.getHighScores(maxSize)) {
-            if (p.getHighScore() < lowestScore) {
+            if (p.getHighScore() <= lowestScore) {
                 lowestScore = p.getHighScore();
             }
         }
 
         assertEquals(lowestScore, highScores.getHighScores(maxSize).get(maxSize-1).getHighScore());
     }
-
-
-
-
-
-
 
 }

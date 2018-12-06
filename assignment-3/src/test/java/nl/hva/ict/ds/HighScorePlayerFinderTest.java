@@ -22,7 +22,7 @@ import static junit.framework.TestCase.assertTrue;
  * @author Nico Tromp, n.j.tromp@hva.nl
  */
 public class HighScorePlayerFinderTest {
-    private static final int MAX_HIGH_SCORE = 100000;
+    public static final int MAX_HIGH_SCORE = 100000;
     private Random randomizer = new SecureRandom();
     HighScoreList highscores;
 
