@@ -65,17 +65,19 @@ public class DoubleHashingMultiValueSymbolTable implements MultiValueSymbolTable
      */
     @Override
     public List<Player> get(String key) {
-        List<Player> players = new ArrayList<>();
+        List<Player> foundPlayers = new ArrayList<>();
         int i = hash(key);
 
         while (keys[i] != null) {
             if (keys[i].equals(key)) {
-                players.add(values[i]);
+                if (!foundPlayers.contains(values[i])) {
+                    foundPlayers.add(values[i]);
+                }
             }
             i += hash2(key);
             i %= maxSize;
         }
-        return players;
+        return foundPlayers;
     }
 
     /**
