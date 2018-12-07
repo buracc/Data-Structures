@@ -42,10 +42,6 @@ public class LinearProbingMultiValueSymbolTable implements MultiValueSymbolTable
     public void put(String key, Player value) {
         int i = hash(key);
         while (keys[i] != null) {
-            if (values[i].equals(value)) {
-                values[i] = value;
-                return;
-            }
             i = (i + 1) % maxSize;
             collisions++;
         }

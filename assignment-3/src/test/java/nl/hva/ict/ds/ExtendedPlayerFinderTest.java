@@ -25,6 +25,21 @@ public class ExtendedPlayerFinderTest extends HighScorePlayerFinderTest {
     }
 
     /**
+     * Test of spelers met dezelfde naam ook worden gevonden.
+     */
+    @Test
+    public void checkSameFirstName() {
+        highscores = new HighScorePlayerFinder(7);
+        Player potter = new Player("Albus", "Potter", 96);
+        Player dumbledore = new Player("Albus", "Dumbledore", 95);
+        highscores.add(potter);
+        highscores.add(dumbledore);
+        List<Player> headless = highscores.findPlayer("Albus", null);
+
+        assertEquals(2, headless.size());
+    }
+
+    /**
      * De volgende methodes berekenen het aantal collisions bij verschillende maximum sizes.
      */
     @Test
