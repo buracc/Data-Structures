@@ -48,9 +48,8 @@ public class DoubleHashingMultiValueSymbolTable implements MultiValueSymbolTable
     @Override
     public void put(String key, Player value) {
         int i = hash(key); // Index
-
         while (values[i] != null) {
-            this.collisions++;
+            collisions++;
             i += hash2(key); // Nieuwe index bij collision
             i %= maxSize;
         }
@@ -67,7 +66,6 @@ public class DoubleHashingMultiValueSymbolTable implements MultiValueSymbolTable
     public List<Player> get(String key) {
         List<Player> foundPlayers = new ArrayList<>();
         int i = hash(key);
-
         while (keys[i] != null) {
             if (keys[i].equals(key)) {
                 if (!foundPlayers.contains(values[i])) {

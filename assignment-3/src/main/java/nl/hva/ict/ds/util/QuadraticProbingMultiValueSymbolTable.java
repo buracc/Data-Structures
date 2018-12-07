@@ -40,14 +40,11 @@ public class QuadraticProbingMultiValueSymbolTable implements MultiValueSymbolTa
      */
     @Override
     public void put(String key, Player value) {
-        int i = hash(key);
         int power = 1;
+        int i = hash(key);
         while (keys[i] != null) {
+            i = (i + (int) Math.pow(power++, 2)) % maxSize;
             collisions++;
-            i = (power * (power++)) % maxSize; // Nieuwe index
-            if (i < 0 || i > maxSize) {
-                i = hash(key); // Nieuwe index als we buiten de lijst zitten
-            }
         }
         keys[i] = key;
         values[i] = value;
@@ -61,15 +58,15 @@ public class QuadraticProbingMultiValueSymbolTable implements MultiValueSymbolTa
     @Override
     public List<Player> get(String key) {
         List<Player> foundPlayers = new ArrayList<>();
-        int i = hash(key);
         int power = 1;
+        int i = hash(key);
         while (i > 0 && i < maxSize) {
             if (keys[i].equals(key)) {
                 if (!foundPlayers.contains(values[i])) {
                     foundPlayers.add(values[i]);
                 }
             }
-            i = (power * (power++)) % maxSize;
+            i = (i + (int) Math.pow(power++, 2)) % maxSize;
         }
         return foundPlayers;
     }

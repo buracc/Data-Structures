@@ -40,10 +40,14 @@ public class LinearProbingMultiValueSymbolTable implements MultiValueSymbolTable
      */
     @Override
     public void put(String key, Player value) {
-        int i = hash(key); // Index
+        int i = hash(key);
         while (keys[i] != null) {
+            if (values[i].equals(value)) {
+                values[i] = value;
+                return;
+            }
+            i = (i + 1) % maxSize;
             collisions++;
-            i = (i + 1) % maxSize; // Nieuwe index bij collision
         }
         keys[i] = key;
         values[i] = value;
@@ -60,7 +64,7 @@ public class LinearProbingMultiValueSymbolTable implements MultiValueSymbolTable
         List<Player> foundPlayers = new ArrayList<>();
         int i = hash(key);
         while (keys[i] != null) {
-            if (keys[i] != null && keys[i].equals(key)) {
+            if (keys[i].equals(key)) {
                 if (!foundPlayers.contains(values[i])) {
                     foundPlayers.add(values[i]);
                 }
